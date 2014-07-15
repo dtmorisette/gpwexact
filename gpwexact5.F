@@ -82,8 +82,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c     define fundamental parameters
 
-      T=21.0+273.15
-      
+      T=21.0
+      T=T+273.15
       pi=3.14159265359
       q=1.602176565e-19
       e0=8.85418782e-14
@@ -322,13 +322,16 @@ c=====================
       ufsval(1)=-60
       delufs=10
 c=====================
-      
+
+      write(4,"(A16, F15.3, A)",advance="no")"w,",ufsval(1)
       do 15 j=2,nufs
-   15 ufsval(j)=ufsval(j-1)+5
-   
-      write(4,*)0.0,',',ufsval(1),',',ufsval(2),',',ufsval(3),',',
-     #ufsval(4),',',ufsval(5),',',ufsval(6),',',ufsval(7),',',
-     #ufsval(8),',',ufsval(9),',',ufsval(10)
+      ufsval(j)=ufsval(j-1)+5
+   15 write(4,"(A, F15.3)",advance="no")',',ufsval(j)
+      write(4,*)''
+      
+c      write(4,*)0.0,',',ufsval(1),',',ufsval(2),',',ufsval(3),',',
+c     #ufsval(4),',',ufsval(5),',',ufsval(6),',',ufsval(7),',',
+c     #ufsval(8),',',ufsval(9),',',ufsval(10)
      
       usmax=-5000
       usmin=5000
@@ -380,9 +383,14 @@ c     Calculate gpwd(i) for each w(i).
 
    30 call gpwdqf(w(i),gpwd(j))
       
-      write(4,*)w(i),',',gpwd(1),',',gpwd(2),',',gpwd(3),',',
-     #gpwd(4),',',gpwd(5),',',gpwd(6),',',gpwd(7),',',
-     #gpwd(8),',',gpwd(9),',',gpwd(10)
+      write(4,"(ES15.7, A)", advance="no")w(i)
+      do 40 k=1,nufs
+   40 write(4,"(A, ES15.7)", advance="no")',',gpwd(k)
+      write(4,*)''
+         
+C      write(4,*)w(i),',',gpwd(1),',',gpwd(2),',',gpwd(3),',',
+C     #gpwd(4),',',gpwd(5),',',gpwd(6),',',gpwd(7),',',
+C     #gpwd(8),',',gpwd(9),',',gpwd(10)
    
    50 continue
    
