@@ -68,8 +68,9 @@ c     dispersion (if the parameter wtunnel is greater than zero).
 c     Reference: JAC PhD thesis (1973), Chapter 2 and Appendix G.
 c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-
-      real nd,ktq,ni,ld
+      
+      double precision T,pi,e0,kb,m0,h,nc,nv
+      real q,nd,ktq,ni,ld
       common /para1/q,ktq,uf,ug,ni,vt,es,cox,ld,wtunnel,snxfact
       common /para2/qfbar,sigqf,qitfb,vgvfbbar,usmax,usmin
       common /dit1/dm,dv,dc,evd,ecd,ec,em,dlhalf,duhalf,da
@@ -81,16 +82,25 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c     define fundamental parameters
 
-      q=1.6e-19
-      e0=8.85e-14
-      ktq=0.0259
-      vt=1e7
+      T=21.0+273.15
+      
+      pi=3.14159265359
+      q=1.602176565e-19
+      e0=8.85418782e-14
+      kb=1.3806504e-23
+      m0=9.10938215e-31
+      h=6.62606896d-34
+      ktq=kb*T/q
+      vt=sqrt(3*kb*T/(0.3712*m0))*100
       
 c     define 4H-SiC and SiO2 material parameters
       
 c=====================
-      eg=3.23
-      ni=6.66e-9
+      eg=3.23-0.00034*(T-296.0)
+      nc=1e-6*2*3*((2.0*pi*0.3712*m0*kb*T/h/h)**(1.5))
+      nv=1e-6*2*1*((2*pi*0.9135*m0*kb*T/h/h)**(1.5))
+      ni=sqrt(nc*nv)*exp(-eg/(2*ktq))
+      
 c=====================
       ug=eg/ktq
       es=10*e0
@@ -104,8 +114,8 @@ c     define tunneling parameters
 c     define specific device parameters
       
 c=====================
-      nd=2e17
-      tox=17e-7
+      nd=1e16
+      tox=20e-7
 c=====================
       uf=-log(nd/ni)
       cox=eox/tox
@@ -217,7 +227,7 @@ c===============================================================
       
 c     Calculate the average flat-band voltage, vfbbar.
 
-      call qitsub(0,qitfb)
+      call qitsub(0.0,qitfb)
 
       vfbbar=phims-qfbar/cox-qitfb/cox
       print *,'Qit(FB)/q =',qitfb/q,', Vfb(bar) =',vfbbar
@@ -314,7 +324,7 @@ c=====================
 c=====================
       
       do 15 j=2,nufs
-   15 ufsval(j)=ufsval(j-1)+˙˙
+   15 ufsval(j)=ufsval(j-1)+5
    
       write(4,*)0.0,',',ufsval(1),',',ufsval(2),',',ufsval(3),',',
      #ufsval(4),',',ufsval(5),',',ufsval(6),',',ufsval(7),',',
@@ -827,12 +837,12 @@ c             |          *        .        *          |
 c             |            *      .      *            |
 c             |              *    .    *              |
 c             |                *  .  *                |
-c             |           dv0 –>  *  <– dc0           |
-c             |–––––––––––––––––––|–––––––––––––––––––|––> (E-Ev)
+c             |           dv0 ->  *  <- dc0           |
+c             |-------------------|-------------------|--> (E-Ev)
 c           ev=0     ^            em           ^    ec=eg
 c                    |                         |
 c                   evd                       ecd
-c       uts   <––––––|––––––––––––|––––––––––––|–––––––
+c       uts   <------|------------|------------|-------
 c                  uvs>0          0          ucs<0
 c
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
