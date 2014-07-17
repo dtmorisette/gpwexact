@@ -69,7 +69,7 @@ c     Reference: JAC PhD thesis (1973), Chapter 2 and Appendix G.
 c
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       
-      double precision T,pi,e0,kb,m0,h,nc,nv
+      double precision T,pi,e0,kb,m0,h,nc,nv,d,s,ns,tau
       real q,nd,ktq,ni,ld
       common /para1/q,ktq,uf,ug,ni,vt,es,cox,ld,wtunnel,snxfact
       common /para2/qfbar,sigqf,qitfb,vgvfbbar,usmax,usmin
@@ -114,8 +114,8 @@ c     define tunneling parameters
 c     define specific device parameters
       
 c=====================
-      nd=1e16
-      tox=20e-7
+      nd=1e17
+      tox=17e-7
 c=====================
       uf=-log(nd/ni)
       cox=eox/tox
@@ -313,21 +313,30 @@ c     Set up frequencies at which to calculate gpwd.
    
 c     Set up ufs values at which to calculate gpwd.
 
-      nufs=10
-      
-      ufsval(1)=-60
-      
-c=====================
-      nufs=3
-      ufsval(1)=-60
-      delufs=10
-c=====================
+      nufs=11
+            
+      etmin=0.2
+      etmax=0.8
+      ecei=eg/2+ktq*log(nc/nv)/2
 
-      write(4,"(A16, F15.3, A)",advance="no")"w,",ufsval(1)
-      do 15 j=2,nufs
-      ufsval(j)=ufsval(j-1)+5
-   15 write(4,"(A, F15.3)",advance="no")',',ufsval(j)
+      open(6,file="traps.csv")
+      write(6,"(6A16)")"EC-ET,","UFS,","Dit,","SigN,","ns,","tau "
+      
+      write(4,"(A16)",advance="no")"w"
+      do 15 j=1,nufs
+      et=etmin+(j-1)*(etmax-etmin)/(nufs-1)
+      ufsval(j)=(et-ecei)/ktq
+            
+      d=dit(ufsval(j))
+      s=sigman(ufsval(j))
+      ns=ni*exp(-ufsval(j))
+      tau=1/(s*vt*ns)
+      write(6,"(F15.3,A,F15.3,A,ES15.3,A,ES15.3,A,ES15.3,A,ES15.3)"),
+     #et,',',ufsval(j),',',d,',',s,',',ns,',',tau
+
+   15 write(4,"(A, F15.3)",advance="no")',',et
       write(4,*)''
+      close(6)
       
 c      write(4,*)0.0,',',ufsval(1),',',ufsval(2),',',ufsval(3),',',
 c     #ufsval(4),',',ufsval(5),',',ufsval(6),',',ufsval(7),',',
@@ -394,6 +403,7 @@ C     #gpwd(8),',',gpwd(9),',',gpwd(10)
    
    50 continue
    
+      close(4)
       print *,'------------------------------------------'
       print *,'Maximum Us Encountered =',usmax
       print *,'Minimum Us Encountered =',usmin
