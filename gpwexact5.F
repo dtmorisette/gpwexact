@@ -114,7 +114,7 @@ c     define tunneling parameters
 c     define specific device parameters
       
 c=====================
-      nd=1e17
+      nd=2e17
       tox=17e-7
 c=====================
       uf=-log(nd/ni)
@@ -320,19 +320,21 @@ c     Set up ufs values at which to calculate gpwd.
       ecei=eg/2+ktq*log(nc/nv)/2
 
       open(6,file="traps.csv")
-      write(6,"(6A16)")"EC-ET,","UFS,","Dit,","SigN,","ns,","tau "
+      write(6,"(7A16)")"EC-ET,","Us,","Ufs,","Dit,",
+     #"SigN,","ns,","1/tau "
       
       write(4,"(A16)",advance="no")"w"
       do 15 j=1,nufs
       et=etmin+(j-1)*(etmax-etmin)/(nufs-1)
       ufsval(j)=(et-ecei)/ktq
-            
+
       d=dit(ufsval(j))
       s=sigman(ufsval(j))
       ns=ni*exp(-ufsval(j))
       tau=1/(s*vt*ns)
-      write(6,"(F15.3,A,F15.3,A,ES15.3,A,ES15.3,A,ES15.3,A,ES15.3)"),
-     #et,',',ufsval(j),',',d,',',s,',',ns,',',tau
+      write(6,"(F15.3,A,F15.3,A,F15.3,A,ES15.3,A," // 
+     #"ES15.3,A,ES15.3,A,ES15.3)"),
+     #et,',',uf-ufsval(j),',',ufsval(j),',',d,',',s,',',ns,',',1/tau
 
    15 write(4,"(A, F15.3)",advance="no")',',et
       write(4,*)''
