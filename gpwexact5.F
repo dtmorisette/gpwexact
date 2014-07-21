@@ -292,6 +292,7 @@ c     Read output file name and open output file.
 c      print *,'Enter output file name...'
 c      read 901,outfile
       outfile=GPW_FILENAME
+      outfile2=DATA_FILENAME
       
   901 format(a20)
   
@@ -324,7 +325,7 @@ c     Set up ufs values at which to calculate gpwd.
       etmax=ET_MAX
       ecei=eg/2+ktq*log(nc/nv)/2
 
-      open(6,file="traps.csv")
+      open(6,file=outfile2)
       write(6,"(7A16)")"EC-ET,","Us,","Ufs,","Dit,",
      #"SigN,","ns,","1/tau "
       

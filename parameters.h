@@ -38,7 +38,8 @@ gammavb           Exponential slope factor for sigman, upper half of bandgap
 ************************/
 
 
-#define GPW_FILENAME    "test.csv"  		/* outfile              */
+#define GPW_FILENAME    "data/test.csv"  		/* outfile              */
+#define DATA_FILENAME   "data/traps.csv"        /* outfile2             */ 
 
 #define TEMPERATURE     21.0        		/* T                    */
 
