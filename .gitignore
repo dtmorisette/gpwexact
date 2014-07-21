@@ -1,3 +1,5 @@
 *.csv
 *.dSYM
 bin
+src/parameters.h
+
