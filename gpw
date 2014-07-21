@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+gfortran src/gpwexact5.F -g -o bin/gpwexact5.bin
+bin/gpwexact5.bin
