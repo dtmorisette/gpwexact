@@ -1,3 +1,5 @@
+#include "parameters.h"
+      
       program gpwexact5
       
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -82,7 +84,7 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
 c     define fundamental parameters
 
-      T=21.0
+      T=TEMPERATURE
       T=T+273.15
       pi=3.14159265359
       q=1.602176565e-19
@@ -114,19 +116,19 @@ c     define tunneling parameters
 c     define specific device parameters
       
 c=====================
-      nd=2e17
-      tox=17e-7
+      nd=DOPING
+      tox=T_OXIDE
 c=====================
       uf=-log(nd/ni)
       cox=eox/tox
       phims=0
-      qfbar=q*1e13
+      qfbar=q*FIXED_CHARGE
       
 c     Define energy-dependent dit parameters.  Dit is exponential
-c     toward both bands and constant near midgap.  ditcb0 is the
+c     toward both bands and constant near midgap.  dc0 is the
 c     extrapolated value at midgap of the dit equation for the
-c     upper half of the bandgap, and betacb is the exponential
-c     slope factor for the upper half.  ditvb0 and betavb are the
+c     upper half of the bandgap, and betac is the exponential
+c     slope factor for the upper half.  dv0 and betav are the
 c     corresponding variables for the lower half of the bandgap.
 c     ditmin is the value of dit in the middle of the bandgap.
 
@@ -136,21 +138,21 @@ c      of dit in the upper half.)
 c     da = 1 means states are donor-like in the upper half and
 c     acceptor-like in the lower half. da = 0 is the opposite.
 
-      dmin=3e11
-      dc0=1.36e7
-      betac=0.207
+      dmin=DIT_MIDGAP
+      dc0=DIT_C0
+      betac=DIT_BETA_C
       
 c==================================
-      dmin=5e11
-      betac=0
+c      dmin=5e11
+c      betac=0
 c==================================
       
 c     Setting betac = betav = 0 forces dit(E) = dmin = constant.
 c     betac=0
 
-      dv0=dc0
-      betav=betac
-      da=1
+      dv0=DIT_V0
+      betav=DIT_BETA_V
+      da=DIT_DA
       
 c     Define surface state density parameters in a format that is
 c     compatible with subroutine qitsub. Log(Dit) decreases
@@ -253,13 +255,13 @@ c     extrapolated value at midgap of the sign equation for the
 c     upper half of the bandgap, and gammacb is the exponential
 c     slope factor for the upper half.  signvb0 and gammavb are the
 c     corresponding variables for the lower half of the bandgap.
-c     signmax is the value of dit in the middle of the bandgap.
+c     signmax is the value of sigman in the middle of the bandgap.
 
 c     (For now, set sign = signmax in the lower half of bandgap.)
 
-      signmax=1e12
-      signcb0=1.867e4
-      gammacb=0.785
+      signmax=SIGN_MAX
+      signcb0=SIGN_CB0
+      gammacb=SIGN_GAMMA_CB
  
 c===================================
 c     Use Ashish's parameters...
@@ -274,29 +276,32 @@ c===============================================================
 c     signcb0=1.84e3
 c     gammacb=0.9
       
-      signvb0=signmax
-      gammavb=0
+      signvb0=SIGN_VB0
+      gammavb=SIGN_GAMMA_VB
       
 c     Read sigqfq.
       
-      print *,'Enter Sigma(Qf/q) and tunneling width (cm)...'
-      read *,sigqfq,wtunnel
+c      print *,'Enter Sigma(Qf/q) and tunneling width (cm)...'
+c      read *,sigqfq,wtunnel
       
-      sigqf=q*sigqfq
+      sigqf=q*SIGMA_QF
+      wtunnel=TUNNEL_WIDTH
       
 c     Read output file name and open output file.
       
-      print *,'Enter output file name...'
-      read 901,outfile
+c      print *,'Enter output file name...'
+c      read 901,outfile
+      outfile=GPW_FILENAME
+      
   901 format(a20)
   
       open(4,file=outfile)
       
 c     Set up frequencies at which to calculate gpwd.
 
-      nfreq=151
-      fstart=1e-3
-      
+      nfreq=N_FREQUENCIES
+      fstart=START_FREQ
+            
       w(1)=1.00*fstart
       w(2)=1.26*fstart
       w(3)=1.58*fstart
@@ -313,10 +318,10 @@ c     Set up frequencies at which to calculate gpwd.
    
 c     Set up ufs values at which to calculate gpwd.
 
-      nufs=11
+      nufs=N_ET
             
-      etmin=0.2
-      etmax=0.8
+      etmin=ET_MIN
+      etmax=ET_MAX
       ecei=eg/2+ktq*log(nc/nv)/2
 
       open(6,file="traps.csv")
