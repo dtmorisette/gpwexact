@@ -80,7 +80,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       common /sign/signmax,signcb0,gammacb,signvb0,gammavb
       common /usvg/vgvfb(600),usvg(600)
       dimension w(151),gpwd(11),ufsval(11)
-      character outfile*20
+      character outfile*50
+      character outfile2*50
 
 c     define fundamental parameters
 
@@ -300,7 +301,7 @@ c      read 901,outfile
       
 c     Set up frequencies at which to calculate gpwd.
 
-      nfreq=N_FREQUENCIES
+      nfreq=N_FREQ
       fstart=START_FREQ
             
       w(1)=1.00*fstart
@@ -342,7 +343,7 @@ c     Set up ufs values at which to calculate gpwd.
      #"ES15.3,A,ES15.3,A,ES15.3)"),
      #et,',',uf-ufsval(j),',',ufsval(j),',',d,',',s,',',ns,',',1/tau
 
-   15 write(4,"(A, F15.3)",advance="no")',',et
+   15 write(4,"(A, F15.3, A)",advance="no")', ET=',et,'eV'
       write(4,*)''
       close(6)
       
@@ -400,7 +401,7 @@ c     Calculate gpwd(i) for each w(i).
 
    30 call gpwdqf(w(i),gpwd(j))
       
-      write(4,"(ES15.7, A)", advance="no")w(i)
+      write(4,"(ES15.7)", advance="no")w(i)
       do 40 k=1,nufs
    40 write(4,"(A, ES15.7)", advance="no")',',gpwd(k)
       write(4,*)''
@@ -412,9 +413,9 @@ C     #gpwd(8),',',gpwd(9),',',gpwd(10)
    50 continue
    
       close(4)
-      print *,'------------------------------------------'
-      print *,'Maximum Us Encountered =',usmax
-      print *,'Minimum Us Encountered =',usmin
+C      print *,'------------------------------------------'
+C      print *,'Maximum Us Encountered =',usmax
+C      print *,'Minimum Us Encountered =',usmin
    
       stop
       end
