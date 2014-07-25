@@ -80,8 +80,6 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       common /sign/signmax,signcb0,gammacb,signvb0,gammavb
       common /usvg/vgvfb(600),usvg(600)
       dimension w(151),gpwd(11),ufsval(11)
-      character outfile*50
-      character outfile2*50
 
 c     define fundamental parameters
 
@@ -243,12 +241,11 @@ c     density, qflocal.
 
       call usvgtable
       
-c===============================================================
-c     open(4,file='usvg.csv')
-c     do 5 i=1,600
-c   5 write(4,*)vgvfb(i),',',usvg(i)
-c     stop
-c===============================================================
+      open(4,file=USVG_FILENAME)
+      write(4,"(A16,A15)")"Vg-Vfb,","Us"
+      do 5 i=1,600
+    5 write(4,"(F15.6,A,F15.6)")vgvfb(i),',',usvg(i)
+      close(4)
       
 c     Define energy-dependent sig.n parameters. sign is exponential
 c     toward both bands and constant near midgap.  signcb0 is the
@@ -280,24 +277,12 @@ c     gammacb=0.9
       signvb0=SIGN_VB0
       gammavb=SIGN_GAMMA_VB
       
-c     Read sigqfq.
-      
-c      print *,'Enter Sigma(Qf/q) and tunneling width (cm)...'
-c      read *,sigqfq,wtunnel
-      
       sigqf=q*SIGMA_QF
       wtunnel=TUNNEL_WIDTH
-      
-c     Read output file name and open output file.
-      
-c      print *,'Enter output file name...'
-c      read 901,outfile
-      outfile=GPW_FILENAME
-      outfile2=DATA_FILENAME
-      
+            
   901 format(a20)
   
-      open(4,file=outfile)
+      open(4,file=GPW_FILENAME)
       
 c     Set up frequencies at which to calculate gpwd.
 
@@ -326,9 +311,9 @@ c     Set up ufs values at which to calculate gpwd.
       etmax=ET_MAX
       ecei=eg/2+ktq*log(nc/nv)/2
 
-      open(6,file=outfile2)
-      write(6,"(7A16)")"EC-ET,","Us,","Ufs,","Dit,",
-     #"SigN,","ns,","1/tau "
+      open(3,file=DATA_FILENAME)
+      write(3,"(7A16)")"EC-ET,","Us,","Ufs,","Dit,",
+     #"SigN,","ns,","tau "
       
       write(4,"(A16)",advance="no")"w"
       do 15 j=1,nufs
@@ -339,18 +324,14 @@ c     Set up ufs values at which to calculate gpwd.
       s=sigman(ufsval(j))
       ns=ni*exp(-ufsval(j))
       tau=1/(s*vt*ns)
-      write(6,"(F15.3,A,F15.3,A,F15.3,A,ES15.3,A," // 
+      write(3,"(F15.3,A,F15.3,A,F15.3,A,ES15.3,A," // 
      #"ES15.3,A,ES15.3,A,ES15.3)"),
-     #et,',',uf-ufsval(j),',',ufsval(j),',',d,',',s,',',ns,',',1/tau
+     #et,',',uf-ufsval(j),',',ufsval(j),',',d,',',s,',',ns,',',tau
 
    15 write(4,"(A, F15.3, A)",advance="no")', ET=',et,'eV'
       write(4,*)''
-      close(6)
-      
-c      write(4,*)0.0,',',ufsval(1),',',ufsval(2),',',ufsval(3),',',
-c     #ufsval(4),',',ufsval(5),',',ufsval(6),',',ufsval(7),',',
-c     #ufsval(8),',',ufsval(9),',',ufsval(10)
-     
+      close(3)
+           
       usmax=-5000
       usmin=5000
 
@@ -406,16 +387,13 @@ c     Calculate gpwd(i) for each w(i).
    40 write(4,"(A, ES15.7)", advance="no")',',gpwd(k)
       write(4,*)''
          
-C      write(4,*)w(i),',',gpwd(1),',',gpwd(2),',',gpwd(3),',',
-C     #gpwd(4),',',gpwd(5),',',gpwd(6),',',gpwd(7),',',
-C     #gpwd(8),',',gpwd(9),',',gpwd(10)
-   
    50 continue
    
       close(4)
-C      print *,'------------------------------------------'
-C      print *,'Maximum Us Encountered =',usmax
-C      print *,'Minimum Us Encountered =',usmin
+      
+      print *,'------------------------------------------'
+      print *,'Maximum Us Encountered =',usmax
+      print *,'Minimum Us Encountered =',usmin
    
       stop
       end
