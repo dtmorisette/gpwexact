@@ -141,11 +141,6 @@ c     acceptor-like in the lower half. da = 0 is the opposite.
       dc0=DIT_C0
       betac=DIT_BETA_C
       
-c==================================
-c      dmin=5e11
-c      betac=0
-c==================================
-      
 c     Setting betac = betav = 0 forces dit(E) = dmin = constant.
 c     betac=0
 
