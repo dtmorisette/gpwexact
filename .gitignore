@@ -2,5 +2,7 @@
 *.dSYM
 bin
 src/parameters.h
+src/clip.h
 notes
+matlab
 
