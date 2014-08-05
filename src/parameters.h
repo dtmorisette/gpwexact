@@ -1,4 +1,4 @@
-		/************************
+/************************
 gpwexact5.F Parameters:
 
 Requested at run-time:
@@ -38,17 +38,19 @@ gammavb           Exponential slope factor for sigman, upper half of bandgap
 ************************/
 
 
-#define GPW_FILENAME    "data/test.csv"  		/* outfile              */
-#define DATA_FILENAME   "data/traps.csv"        /* outfile2             */ 
+#define GPW_FILENAME    "data/gpw.csv"
+#define DATA_FILENAME   "data/data.csv"
+#define PARAM_FILENAME  "data/param.csv"        
+#define USVG_FILENAME   "data/usvg.csv"
 
 #define TEMPERATURE     21.0        		/* T                    */
 
-#define DOPING          2e17        		/* nd                   */
-#define T_OXIDE         17e-7       		/* tox                  */
-#define FIXED_CHARGE    1e13        		/* qfbar                */
-#define SIGMA_QF        8e11        		/* sigqf                */
+#define DOPING          1e16         		/* nd                   */
+#define T_OXIDE         20e-7       		/* tox                  */
+#define FIXED_CHARGE    1e12        		/* qfbar                */
+#define SIGMA_QF        (FIXED_CHARGE*0.2)	/* sigqf                */
 
-#define TUNNEL_WIDTH    1e-7        		/* wtunnel              */
+#define TUNNEL_WIDTH    0             		/* wtunnel              */
 
 #define N_FREQ          151         		/* nfreq                */
 #define START_FREQ      1e-3        		/* fstart               */
@@ -57,15 +59,15 @@ gammavb           Exponential slope factor for sigman, upper half of bandgap
 #define ET_MIN          0.2         		/* etmin                */
 #define ET_MAX          0.8         		/* etmax                */
 
-#define DIT_MIDGAP      3e10        		/* dmin                 */
-#define DIT_C0          1.36e7      		/* dc0                  */
+#define DIT_MIDGAP      0.0           		/* dmin                 */
+#define DIT_C0          8.48e6        		/* dc0                  */
 #define DIT_BETA_C      0.207       		/* betac                */
-#define DIT_V0          1.36e7      		/* dv0                  */
+#define DIT_V0          8.48e6      		/* dv0                  */
 #define DIT_BETA_V      0.207       		/* betav                */
 #define DIT_DA          1           		/* da                   */
 
-#define SIGN_MAX        1e12        		/* signmax              */
-#define SIGN_CB0        1.867e4     		/* signcb0              */
-#define SIGN_GAMMA_CB   0.785       		/* gammacb              */
-#define SIGN_VB0        1e12        		/* signcb0              */
+#define SIGN_MAX        1e12             		/* signmax              */
+#define SIGN_CB0        1e-16        		/* signcb0              */
+#define SIGN_GAMMA_CB   0           		/* gammacb              */
+#define SIGN_VB0        1e-16        		/* signcb0              */
 #define SIGN_GAMMA_VB   0           		/* gammacb              */
